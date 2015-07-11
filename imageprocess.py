@@ -1,4 +1,5 @@
 from PIL import Image
+import argparse
 
 """
 
@@ -7,11 +8,10 @@ from PIL import Image
 class GRAYSCALE:
 	# http://paulbourke.net/dataformats/asciiart/
 	SHORT = ' .:-=+*#%@'
-	SHORT = '@%#*+=-:. '
 	LONG = ' .\'`^",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$'
 
 class ImgProcess:
-	def __init__(self, img_path, width=100, grayscale=GRAYSCALE.LONG):
+	def __init__(self, img_path, width=100, grayscale=GRAYSCALE.LONG, invert=False):
 		self.img = Image.open(img_path)
 
 		# Resize first
@@ -24,7 +24,7 @@ class ImgProcess:
 
 		# Get pixels
 		self.pix = self.img.load()
-		self.grayscale = grayscale
+		self.grayscale = grayscale if invert else grayscale[::-1]
 		self.gs_length = len(grayscale)
 
 	def resize_to_width(self, width):
@@ -43,11 +43,22 @@ class ImgProcess:
 			result +=  '\n' 
 		return result
 
-print ImgProcess(img_path="grumpy.png", width=50, grayscale=GRAYSCALE.SHORT).convert_image_to_ascii()
+
+parser = argparse.ArgumentParser(description="Convert an image to ASCII")
+parser.add_argument("path", action="store", help="Path of image to convert to ascii")
+parser.add_argument("-w", "--width", action="store", required=False, dest="width", default=60, help="Width of pixels")
+parser.add_argument('-i', '--invert', action='store_true')
+parser.add_argument('-l', '--long', action='store_true', help="Use a longer ASCII representation")
+
+args = parser.parse_args()
+if args.path:
+	print ImgProcess(img_path=args.path, width=args.width, grayscale=GRAYSCALE.LONG if args.long else GRAYSCALE.SHORT, invert=args.invert).convert_image_to_ascii()
 
 
-
-
+"""
+Uncomment for testing:
+"""
+# print ImgProcess(img_path="grumpy.png", width=60, grayscale=GRAYSCALE.SHORT, invert=False).convert_image_to_ascii()
 
 
 
