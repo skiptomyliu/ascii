@@ -43,7 +43,7 @@ class ImgProcess:
 			result +=  '\n' 
 		return result
 
-print ImgProcess(img_path="grumpy.png", width=60, grayscale=GRAYSCALE.SHORT).convert_image_to_ascii()
+print ImgProcess(img_path="grumpy.png", width=50, grayscale=GRAYSCALE.SHORT).convert_image_to_ascii()
 
 
 
